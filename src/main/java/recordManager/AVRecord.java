@@ -1,6 +1,8 @@
-package EntryManager;
+package recordManager;
 
-public class AVRecord {
+import java.io.Serializable;
+
+public class AVRecord implements Serializable {
     private String name;
     private Integer offsetStart;
     private Integer offsetEnd;
@@ -73,5 +75,17 @@ public class AVRecord {
 
     public void setFileType(String fileType) {
         this.fileType = fileType;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append("Name: ").append(this.name)
+                .append("; OffsetStart: ").append(this.offsetStart)
+                .append("; OffsetEnd: ").append(this.offsetEnd)
+                .append("; Lenght: ").append(this.lenght)
+                .append("; FirstBytes: ").append(this.firstBytes)
+                .append("; Hash: ").append(this.hash)
+                .append("; FileType: ").append(this.fileType)
+                .append(";").toString();
     }
 }
