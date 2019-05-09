@@ -1,7 +1,10 @@
 package recordManager;
 
+import ahoCorasick.Tree;
+
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class RecordManager {
     private  static RecordManager instance;
@@ -22,6 +25,8 @@ public class RecordManager {
     private String fileName = "signatureDB.bin";
 
     private ArrayList<AVRecord> avRecords = null;
+    private Tree avTree = null;
+    private ArrayList<String> existingFileExtensionsInVirusDB = null;
 
     public ArrayList<AVRecord> getAVRecords(){
         if(avRecords == null) {
@@ -73,10 +78,69 @@ public class RecordManager {
             System.out.println(ex);
         }
 
+
         return list;
     }
 
 
+
+    //----
+
+    public Tree getTree(){
+        if(avTree == null){
+            updateTree();
+        }
+
+        return avTree;
+    }
+
+    private void updateTree(){
+        if(avRecords == null){
+            avRecords = update();
+        }
+
+        Tree tree = new Tree();
+
+
+        for(int i = 0; i < avRecords.size(); i++){
+            tree.add(avRecords.get(i).getFirstBytes(), avRecords.get(i));
+        }
+
+        tree.prepare();
+
+        this.avTree = tree;
+    }
+
+
+
+    //--------------
+
+    public ArrayList<String> getExistingFileExtensionsInVirusDB(){
+        if(existingFileExtensionsInVirusDB == null){
+            updateExistingFileExtensionsInVirusDB();
+        }
+
+        return existingFileExtensionsInVirusDB;
+    }
+
+    private void updateExistingFileExtensionsInVirusDB(){
+        if(avRecords == null){
+            avRecords = update();
+        }
+
+        ArrayList<String> fileExtensions = new ArrayList<String>();
+        for(int i = 0; i < avRecords.size(); i++){
+            fileExtensions.add(avRecords.get(i).getFileType());
+        }
+
+        ArrayList<String> uniqueFileExtensions = new ArrayList<String>();
+        HashSet<String> uniqueValues = new HashSet<String>(fileExtensions);
+        for (String value : uniqueValues) {
+            uniqueFileExtensions.add(value);
+        }
+
+        existingFileExtensionsInVirusDB = uniqueFileExtensions;
+    }
 
 
 }
