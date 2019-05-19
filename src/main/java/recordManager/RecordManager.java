@@ -139,6 +139,9 @@ public class RecordManager {
             uniqueFileExtensions.add(value);
         }
 
+        //
+        uniqueFileExtensions.add("zip");
+
         existingFileExtensionsInVirusDB = uniqueFileExtensions;
     }
 
